@@ -1,5 +1,9 @@
 #pragma once
 namespace Invaders {
+    struct Coordinates;
+    class IDrawable;
+    class IDisplay;
+
     struct IDisplay {
         virtual void print(int x, int y, char c) = 0;
         virtual ~IDisplay() = default;
@@ -7,22 +11,26 @@ namespace Invaders {
 
     class ConsoleDisplay : public IDisplay {
     public:
-        void print(int x, int y, char c) override;
+        void print(int x, int y, char c) override {
+            // Реализация метода
+        }
     };
 
     struct IDrawable {
         virtual void DrawOn(IDisplay& out) const = 0;
-        virtual void Update() = 0; // перемещение и обновление состояния
+        virtual void Update() = 0;
         virtual ~IDrawable() = default;
     };
 
     enum Event {
         KeyPress = 0
     };
+
     struct Coordinates {
         int x;
         int y;
     };
+
     class GameObject : public IDrawable {
     protected:
         Coordinates _position;
@@ -34,8 +42,11 @@ namespace Invaders {
             _is_active(true) {}
 
         virtual void OnEvent(Event e, char c) = 0;
-        //virtual void OnCollision(GameObject* other) = 0;
-        void DrawOn(IDisplay& out) const override;
-        void Update() override;
+        void DrawOn(IDisplay& out) const override {
+            // Реализация метода
+        }
+        void Update() override {
+            // Реализация метода
+        }
     };
 }
