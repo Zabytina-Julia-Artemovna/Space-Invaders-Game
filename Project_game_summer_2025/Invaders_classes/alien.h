@@ -3,67 +3,52 @@
 #include "game_object.h"
 namespace Invaders {
     std::chrono::steady_clock::time_point lastTime;
-    enum class AlienType {
-        SMALL,
-        MEDIUM,
-        LARGE
-    };
     class Alien : public GameObject {
-    private:
-        AlienType _type; 
+    protected:
         size_t _cost;
-        int _speed = 2;
+        int _speed = 1;
+        int _right_border;
+        int _left_border;
+        std::chrono::steady_clock::time_point lastTime;
     public:
-        Alien(int x, int y, AlienType type) :
-            GameObject(x, y), _type(type) {
-            switch (_type) {
-            case AlienType::SMALL:
-                _appearance = 'S';
-                _cost = 10;
-                break;
-            case AlienType::MEDIUM:
-                _appearance = 'M';
-                _cost = 20;
-                break;
-            case AlienType::LARGE:
-                _appearance = 'L';
-                _cost = 30;
-                break;
-            }
-        }
+        virtual ~Alien() = default;
+        Alien(int x, int y, char appearance, size_t cost,
+             int right_border, int left_border)
+            : GameObject(x, y, appearance),
+            _cost(cost), _right_border(right_border),
+            _left_border(left_border),
+            lastTime(std::chrono::steady_clock::now()){}
+
         void OnEvent(Event e, char c) override
         {
-            static auto lastTime = std::chrono::steady_clock::now();
             auto currentTime = std::chrono::steady_clock::now();
-            int durationTime =
-                std::chrono::duration_cast<std::chrono::milliseconds>
+            int durationTime = std::chrono::duration_cast<std::chrono::milliseconds>
                 (currentTime - lastTime).count();
             lastTime = currentTime;
-            int distance = (_speed * durationTime) / 16;  // Регулируйте делитель
+            int distance = (_speed * durationTime) / 32;
             int newX = _position.x;
             int newY = _position.y;
             if (_speed > 0) {
-                if (newX + distance < 208) {
+                if (newX + distance < _right_border) {
                     newX += distance;
                 } else {
-                    newY++;
+                    newY = _position.y + 1;
                     _speed *= -1;
-                    newX = 207;  // Фиксация у правой границы
+                    newX = _right_border - 1;
                 }
             }
             else if (_speed < 0) {
-                if (newX + distance > 0) {
+                if (newX + distance > _left_border) {
                     newX += distance;
                 }
                 else {
-                    newY++;
+                    newY = _position.y + 1;
                     _speed *= -1;
-                    newX = 1;  // Фиксация у левой границы
+                    newX = _left_border+1;
                 }
             }
             UpdatePosition(newX, newY);
         }
-        void Shoot();
-        //void OnCollision(GameObject* other) override;
+        virtual void Shoot() = 0;
     };
 }
