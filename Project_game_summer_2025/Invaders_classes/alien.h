@@ -1,6 +1,8 @@
 #pragma once
+#include <chrono>
 #include "game_object.h"
 namespace Invaders {
+    std::chrono::steady_clock::time_point lastTime;
     enum class AlienType {
         SMALL,
         MEDIUM,
@@ -8,39 +10,60 @@ namespace Invaders {
     };
     class Alien : public GameObject {
     private:
-        AlienType _type;
-        char _alien_appearance;
+        AlienType _type; 
         size_t _cost;
+        int _speed = 2;
     public:
         Alien(int x, int y, AlienType type) :
             GameObject(x, y), _type(type) {
             switch (_type) {
             case AlienType::SMALL:
-                _alien_appearance = 's';
+                _appearance = 'S';
                 _cost = 10;
                 break;
             case AlienType::MEDIUM:
-                _alien_appearance = 'm';
+                _appearance = 'M';
                 _cost = 20;
                 break;
             case AlienType::LARGE:
-                _alien_appearance = 'l';
+                _appearance = 'L';
                 _cost = 30;
                 break;
             }
         }
-        AlienType getType() const {
-            return _type;
-        }
-        char getAppearance() const {
-            return _alien_appearance;
-        }
-        size_t getCost() const {
-            return _cost;
+        void OnEvent(Event e, char c) override
+        {
+            static auto lastTime = std::chrono::steady_clock::now();
+            auto currentTime = std::chrono::steady_clock::now();
+            int durationTime =
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                (currentTime - lastTime).count();
+            lastTime = currentTime;
+            int distance = (_speed * durationTime) / 16;  // Регулируйте делитель
+            int newX = _position.x;
+            int newY = _position.y;
+            if (_speed > 0) {
+                if (newX + distance < 208) {
+                    newX += distance;
+                } else {
+                    newY++;
+                    _speed *= -1;
+                    newX = 207;  // Фиксация у правой границы
+                }
+            }
+            else if (_speed < 0) {
+                if (newX + distance > 0) {
+                    newX += distance;
+                }
+                else {
+                    newY++;
+                    _speed *= -1;
+                    newX = 1;  // Фиксация у левой границы
+                }
+            }
+            UpdatePosition(newX, newY);
         }
         void Shoot();
         //void OnCollision(GameObject* other) override;
-        //void Draw() const override;
-        void Update() override;
     };
 }
