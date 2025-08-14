@@ -11,21 +11,23 @@ namespace Invaders {
     };
     struct IDrawable {
         virtual void DrawOn(IDisplay& out) const = 0;
-        virtual void Update() = 0;
         virtual ~IDrawable() = default;
     };
-    enum Event {
-        KeyPress = 0
+    enum class Event {
+        KeyPress,
+        Timer
     };
     class ConsoleDisplay : public IDisplay {
     public:
         void print(int x, int y, char c) override {
             HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            COORD coordinates = { 
-                static_cast<SHORT>(x - 1), static_cast<SHORT>(y - 1) 
+            if (hConsole == INVALID_HANDLE_VALUE) return;
+            COORD coordinates = {
+                static_cast<SHORT>(x), static_cast<SHORT>(y)
             };
             SetConsoleCursorPosition(hConsole, coordinates);
-            WriteConsoleOutputCharacterA(hConsole, &c, 1, coordinates, nullptr);
+            DWORD written;
+            WriteConsoleOutputCharacterA(hConsole, &c, 1, coordinates, &written);
         }
     };
     class GameObject : public IDrawable {
