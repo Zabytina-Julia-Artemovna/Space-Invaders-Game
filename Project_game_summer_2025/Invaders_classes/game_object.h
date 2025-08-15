@@ -1,5 +1,9 @@
 #pragma once
 #include <windows.h>
+#include <vector>     
+#include <iostream>   
+#include <memory>     
+#include <algorithm>  
 namespace Invaders {
     struct Coordinates {
         int x;
@@ -20,27 +24,42 @@ namespace Invaders {
         Timer
     };
     class ConsoleDisplay : public IDisplay {
+    private:
+        std::vector<CHAR_INFO> buffer;
+        COORD bufferSize;
+        COORD bufferCoord;
+        SMALL_RECT writeRegion;
+        HANDLE hConsole;
     public:
+        ConsoleDisplay(int width, int height) : hConsole(GetStdHandle(STD_OUTPUT_HANDLE)) {
+            bufferSize.X = width;
+            bufferSize.Y = height;
+            bufferCoord.X = 0;
+            bufferCoord.Y = 0;
+            writeRegion = { 0, 0, static_cast<SHORT>(width - 1), 
+                static_cast<SHORT>(height - 1) };
+            buffer.resize(width * height);
+            clearAll();
+        }
+        void clearAll() {
+            for (auto& cell : buffer) {
+                cell.Char.AsciiChar = ' ';
+                cell.Attributes = 7;
+            }
+            flush();
+        }
         void print(int x, int y, char c) override {
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            if (hConsole == INVALID_HANDLE_VALUE) return;
-            COORD coordinates = {
-                static_cast<SHORT>(x), static_cast<SHORT>(y)
-            };
-            SetConsoleCursorPosition(hConsole, coordinates);
-            DWORD written;
-            WriteConsoleOutputCharacterA(hConsole, &c, 1, coordinates, &written);
+            if (x >= 0 && x < bufferSize.X && y >= 0 && y < bufferSize.Y) {
+                buffer[y * bufferSize.X + x].Char.AsciiChar = c;
+            }
         }
         void clear(int x, int y) override {
-            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-            if (hConsole == INVALID_HANDLE_VALUE) return;
-            COORD coordinates = {
-                static_cast<SHORT>(x), static_cast<SHORT>(y)
-            };
-            SetConsoleCursorPosition(hConsole, coordinates);
-            DWORD written;
-            char c = ' ';
-            WriteConsoleOutputCharacterA(hConsole, &c, 1, coordinates, &written);
+            if (x >= 0 && x < bufferSize.X && y >= 0 && y < bufferSize.Y) {
+                buffer[y * bufferSize.X + x].Char.AsciiChar = ' ';
+            }
+        }
+        void flush() {
+            WriteConsoleOutputA(hConsole, buffer.data(), bufferSize, bufferCoord, &writeRegion);
         }
     };
     class GameObject : public IDrawable {
@@ -50,11 +69,11 @@ namespace Invaders {
         bool _is_active;
         char _appearance;
     public:
-        GameObject(int x, int y) :
+        GameObject(int x, int y, char appearance) :
             _position{ x, y },
             _previous_position{ x, y},
-            _is_active(true) {}
-
+            _is_active(true),
+            _appearance(appearance){}
         virtual void OnEvent(Event e, char c) = 0;
         void DrawOn(IDisplay& out) const override {
             out.print(_position.x, _position.y, _appearance);
