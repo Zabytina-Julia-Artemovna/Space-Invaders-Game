@@ -1,19 +1,42 @@
 #pragma once
 #include "game_object.h"
+#include <chrono>
+
 namespace Invaders {
+    enum class Direction {
+        Up,
+        Down
+    };
     class Bullet : public GameObject {
     private:
+        int _speed = 1;
         bool _is_player_bullet;
-        // возможно _direction = -1/1 для определения направления вниз/вверх
-        //Структура!
+        std::chrono::steady_clock::time_point lastTime;
+
     public:
         Bullet(int x, int y, bool is_player_bullet) :
-            GameObject(x, y), _is_player_bullet(is_player_bullet) {}
-        bool isPlayerBullet() const {
-            return _is_player_bullet;
+            GameObject(x, y, '*'), _is_player_bullet(is_player_bullet), 
+            lastTime(std::chrono::steady_clock::now()) {}
+        void OnEvent(Event e, char c) override {
+            if (e == Event::Timer) {
+                auto currentTime = std::chrono::steady_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+                    (currentTime - lastTime).count();
+
+                if (duration > 50) { 
+                    lastTime = currentTime;
+
+                    int newX = _position.x;
+                    int newY = _position.y + (_is_player_bullet ? -_speed : _speed);
+
+                    if (newY < 0 || newY > 50) {
+                        _is_active = false;
+                    }
+                    else {
+                        UpdatePosition(newX, newY);
+                    }
+                }
+            }
         }
-        //void Draw() const override;
-        void Update() override;
-        //void OnCollision(GameObject* other) override;
     };
 }
