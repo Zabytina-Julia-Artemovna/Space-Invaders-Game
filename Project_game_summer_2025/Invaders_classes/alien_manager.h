@@ -7,6 +7,8 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
+
 namespace Invaders {
     class AlienManager {
     private:
@@ -18,6 +20,18 @@ namespace Invaders {
             static std::mt19937 gen(rd());
             std::uniform_int_distribution<> distrib(min, max);
             return distrib(gen);
+        }
+        int findLowestRow() {
+            if (!_redAliens.empty()) {
+                return 0;
+            }
+            if (!_greenAliens.empty()) {
+                return 1;
+            }
+            if (!_whiteAliens.empty()) {
+                return 2;
+            }
+            return -1;
         }
     public:
         void CreateAlienSwarm() {
@@ -41,6 +55,38 @@ namespace Invaders {
                 _whiteAliens.push_back(Invaders::WhiteAlien(coordXwhite, 2, 150, 0));
                 countWhite++;
                 coordXwhite--;
+            }
+        }
+        bool canShoot() {
+            try {
+                Alien& shooter = getShooterAlien();
+                auto currentTime = std::chrono::steady_clock::now();
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+                    (currentTime - shooter.getLastShotTime()).count();
+                return duration > shooter.getShootCooldown();
+            }
+            catch (...) {
+                return false;
+            }
+        }
+        Alien& getShooterAlien() {
+            int lowestRow = findLowestRow();
+            if (lowestRow == -1) {
+                throw std::runtime_error("No active aliens");
+            }
+            int randomNumber;
+            switch (lowestRow) {
+            case 0:
+                randomNumber = getRandomNumber(0, _redAliens.size() - 1);
+                return _redAliens[randomNumber];
+            case 1:
+                randomNumber = getRandomNumber(0, _greenAliens.size() - 1);
+                return _greenAliens[randomNumber];
+            case 2:
+                randomNumber = getRandomNumber(0, _whiteAliens.size() - 1);
+                return _whiteAliens[randomNumber];
+            default:
+                throw std::runtime_error("Invalid row");
             }
         }
         std::vector<Invaders::RedAlien>& getRedAliens() {
