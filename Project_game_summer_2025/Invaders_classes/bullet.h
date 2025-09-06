@@ -3,10 +3,6 @@
 #include <chrono>
 
 namespace Invaders {
-    enum class Direction {
-        Up,
-        Down
-    };
     class Bullet : public GameObject {
     private:
         int _speed = 1;
@@ -15,7 +11,7 @@ namespace Invaders {
 
     public:
         Bullet(int x, int y, bool is_player_bullet) :
-            GameObject(x, y, '*'), _is_player_bullet(is_player_bullet), 
+            GameObject(x, y, 'O'), _is_player_bullet(is_player_bullet), 
             lastTime(std::chrono::steady_clock::now()) {}
         void OnEvent(Event e, char c) override {
             if (e == Event::Timer) {
@@ -29,7 +25,7 @@ namespace Invaders {
                     int newX = _position.x;
                     int newY = _position.y + (_is_player_bullet ? -_speed : _speed);
 
-                    if (newY < 0 || newY > 50) {
+                    if (newY < -1 || newY > 100) {
                         _is_active = false;
                     }
                     else {
@@ -37,6 +33,9 @@ namespace Invaders {
                     }
                 }
             }
+        }
+        bool isActive()  {
+            return _is_active;
         }
     };
 }
