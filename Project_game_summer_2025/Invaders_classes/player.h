@@ -9,14 +9,14 @@ namespace Invaders {
         std::vector<Bullet> _player_bullets;
         std::chrono::steady_clock::time_point _lastShotTime;
         bool _canShoot = false;
-        const int _shootCooldown = 1000; 
+        const int _shootCooldown = 2000; 
     public:
-        Player(int x, int y) : GameObject(x, y, 'O') {}
+        Player(int x, int y) : GameObject(x, y, 'A') {}
         void OnEvent(Event e, char c) override {
             if (e == Event::KeyPress) {
                 int newX = _position.x;
                 int newY = _position.y;
-                if ((c == 'D' || c == 'd') && newX + 1 < 200) {
+                if ((c == 'D' || c == 'd') && newX + 1 < 150) {
                     newX += 2;
                 }
                 else if ((c == 'A' || c == 'a') && newX - 1 > 0) {
