@@ -89,6 +89,9 @@ namespace Invaders {
         Coordinates getPosition() {
             return _position;
         }
+        bool isActive() {
+            return _is_active;
+        }
       
     };
 }
