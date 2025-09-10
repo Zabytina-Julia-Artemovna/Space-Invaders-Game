@@ -21,7 +21,8 @@ namespace Invaders {
     };
     enum class Event {
         KeyPress,
-        Timer
+        Timer,
+        AlienShoot
     };
     class ConsoleDisplay : public IDisplay {
     private:
@@ -85,5 +86,9 @@ namespace Invaders {
             _previous_position = _position;  
             _position = { newX, newY };  
         }
+        Coordinates getPosition() {
+            return _position;
+        }
+      
     };
 }
