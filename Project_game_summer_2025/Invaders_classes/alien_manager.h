@@ -98,5 +98,34 @@ namespace Invaders {
         std::vector<Invaders::WhiteAlien>& getWhiteAliens() {
             return _whiteAliens;
         }
+        bool isAliensDead() {
+            return _redAliens.empty() && _greenAliens.empty() && _whiteAliens.empty();
+        }
+        void removeDeadAliens() { 
+            for (size_t i = 0; i < _redAliens.size(); ) {
+                if (!_redAliens[i].isActive()) {
+                    _redAliens.erase(_redAliens.begin() + i);
+                }
+                else {
+                    i++;
+                }
+            }
+            for (size_t i = 0; i < _greenAliens.size(); ) {
+                if (!_greenAliens[i].isActive()) {
+                    _greenAliens.erase(_greenAliens.begin() + i);
+                }
+                else {
+                    i++;
+                }
+            }
+            for (size_t i = 0; i < _whiteAliens.size(); ) {
+                if (!_whiteAliens[i].isActive()) {
+                    _whiteAliens.erase(_whiteAliens.begin() + i);
+                }
+                else {
+                    i++;
+                }
+            }
+        }
     };
 }
