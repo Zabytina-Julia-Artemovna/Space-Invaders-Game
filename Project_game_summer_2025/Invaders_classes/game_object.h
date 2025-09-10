@@ -92,6 +92,9 @@ namespace Invaders {
         bool isActive() {
             return _is_active;
         }
+        void setIsActive(bool value) {
+            _is_active = value;
+        }
       
     };
 }
