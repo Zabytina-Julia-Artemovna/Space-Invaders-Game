@@ -1,0 +1,18 @@
+﻿  main.cpp
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien.h(29,34): warning C4244: 'initializing': conversion from '_Rep' to 'int', possible loss of data
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien.h(29,34): warning C4244:         with
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien.h(29,34): warning C4244:         [
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien.h(29,34): warning C4244:             _Rep=__int64
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien.h(29,34): warning C4244:         ]
+  (compiling source file 'main.cpp')
+  
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien_manager.h(80,69): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien_manager.h(83,71): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+C:\Users\user\source\repos\Project_game_on_summer\Invaders_classes\alien_manager.h(86,71): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  (compiling source file 'main.cpp')
+  
+  Invaders_game.vcxproj -> C:\Users\user\source\repos\Project_game_on_summer\x64\Debug\Invaders_game.exe
