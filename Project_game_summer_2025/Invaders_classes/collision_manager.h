@@ -32,6 +32,7 @@ namespace Invaders {
                 if (player.getPosition().x == aliens.getRedAliens()[i].getPosition().x
                     && player.getPosition().y == aliens.getRedAliens()[i].getPosition().y
                     && aliens.getRedAliens()[i].isActive()) {
+                    player.setIsActive(false);
                     return true;
                 }
             }
@@ -39,6 +40,7 @@ namespace Invaders {
                 if (player.getPosition().x == aliens.getGreenAliens()[i].getPosition().x
                     && player.getPosition().y == aliens.getGreenAliens()[i].getPosition().y
                     && aliens.getGreenAliens()[i].isActive()) {
+                    player.setIsActive(false);
                     return true;
                 }
             }
@@ -46,6 +48,7 @@ namespace Invaders {
                 if (player.getPosition().x == aliens.getWhiteAliens()[i].getPosition().x
                     && player.getPosition().y == aliens.getWhiteAliens()[i].getPosition().y
                     && aliens.getWhiteAliens()[i].isActive()) {
+                    player.setIsActive(false);
                     return true;
                 }
             }
@@ -58,6 +61,7 @@ namespace Invaders {
                         && player.getPosition().y == aliens.getRedAliens()[i].getBullets()[j].getPosition().y
                         && aliens.getRedAliens()[i].isActive()
                         && aliens.getRedAliens()[i].getBullets()[j].isActive()) {
+                        player.setIsActive(false);
                         return true;
                     }
                 }
@@ -68,6 +72,7 @@ namespace Invaders {
                         && player.getPosition().y == aliens.getGreenAliens()[i].getBullets()[j].getPosition().y
                         && aliens.getGreenAliens()[i].isActive()
                         && aliens.getGreenAliens()[i].getBullets()[j].isActive()) {
+                        player.setIsActive(false);
                         return true;
                     }
                 }
@@ -79,6 +84,7 @@ namespace Invaders {
                         && player.getPosition().y == aliens.getWhiteAliens()[i].getBullets()[j].getPosition().y
                         && aliens.getWhiteAliens()[i].isActive()
                         && aliens.getWhiteAliens()[i].getBullets()[j].isActive()) {
+                        player.setIsActive(false);
                         return true;
                     }
                 }
@@ -93,6 +99,7 @@ namespace Invaders {
                         && aliens.getRedAliens()[i].isActive()
                         && player.getBullets()[j].isActive()) {
                         aliens.getRedAliens()[i].setIsActive(false);
+                        player.getBullets()[j].setIsActive(false); 
                         return true;
                     }
                 }
@@ -104,6 +111,7 @@ namespace Invaders {
                         && aliens.getGreenAliens()[i].isActive()
                         && player.getBullets()[j].isActive()) {
                         aliens.getGreenAliens()[i].setIsActive(false);
+                        player.getBullets()[j].setIsActive(false);
                         return true;
                     }
                 }
@@ -115,6 +123,7 @@ namespace Invaders {
                         && aliens.getWhiteAliens()[i].isActive()
                         && player.getBullets()[j].isActive()) {
                         aliens.getWhiteAliens()[i].setIsActive(false);
+                        player.getBullets()[j].setIsActive(false);
                         return true;
                     }
                 }
